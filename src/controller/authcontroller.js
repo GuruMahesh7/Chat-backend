@@ -134,8 +134,8 @@ export const verifyEmail = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true, // Always true for sameSite: "none"
+      sameSite: "none",
     });
 
     res
@@ -221,8 +221,8 @@ export const verifyMFA = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({ message: "MFA successful", user, token });
@@ -236,8 +236,8 @@ export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("jwt", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
@@ -406,8 +406,8 @@ export const googleAuth = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({ message: "Google login successful", user, token });
