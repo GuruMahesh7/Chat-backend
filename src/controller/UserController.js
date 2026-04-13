@@ -3,7 +3,7 @@ import FriendRequest from "../model/FriendRequest.js";
 
 export const getRecommendedUsers = async (req, res) => {
   try {
-    const currentUserId = req.user.id;
+    const currentUserId = req.user._id;
     const currentUser = req.user;
     const recommendedUsers = await User.find({
       $and: [
@@ -20,7 +20,7 @@ export const getRecommendedUsers = async (req, res) => {
 
 export const getMyFriends = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
       .select("friends")
       .populate(
         "friends",
@@ -35,7 +35,7 @@ export const getMyFriends = async (req, res) => {
 
 export const sendFriendRequest = async (req, res) => {
   try {
-    const myId = req.user.id;
+    const myId = req.user._id;
     const { id: recipientId } = req.params;
 
     if (myId === recipientId) {
@@ -87,7 +87,7 @@ export const acceptFriendRequest = async (req, res) => {
       return res.status(404).json({ message: "Friend request not found" });
     }
 
-    if (friendrequest.recipient.toString() !== req.user.id) {
+    if (friendrequest.recipient.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         message: "you are not authorized to accept this friend request ",
       });
@@ -129,14 +129,14 @@ export const acceptFriendRequest = async (req, res) => {
 export const getFriendRequests = async (req, res) => {
   try {
     const incomingRequests = await FriendRequest.find({
-      recipient: req.user.id,
+      recipient: req.user._id,
       status: "pending",
     }).populate(
       "sender",
       "FullName profilePic nativeLanguage learningLanguage",
     );
     const acceptedRequests = await FriendRequest.find({
-      recipient: req.user.id,
+      recipient: req.user._id,
       status: "accepted",
     }).populate("sender", "FullName profilePic ");
     return res.status(200).json({ incomingRequests, acceptedRequests });
@@ -149,7 +149,7 @@ export const getFriendRequests = async (req, res) => {
 export const getOutgoingFriendRequests = async (req, res) => {
   try {
     const outgoingRequests = await FriendRequest.find({
-      sender: req.user.id,
+      sender: req.user._id,
       status: "pending",
     }).populate(
       "recipient",
@@ -170,7 +170,7 @@ export const rejectFriendRequest = async (req, res) => {
       return res.status(404).json({ message: "Friend request not found" });
     }
 
-    if (friendRequest.recipient.toString() !== req.user.id) {
+    if (friendRequest.recipient.toString() !== req.user._id.toString()) {
       return res
         .status(401)
         .json({ message: "Unauthorized to reject this request" });
@@ -188,7 +188,7 @@ export const rejectFriendRequest = async (req, res) => {
 
 export const removeFriend = async (req, res) => {
   try {
-    const myId = req.user.id;
+    const myId = req.user._id;
     const { id: friendId } = req.params;
 
     // Remove from both users' friends list

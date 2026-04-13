@@ -7,7 +7,7 @@ const api_key = process.env.STREAM_API_KEY;
 const api_secret = process.env.STREAM_API_SECRET;
 
 if (!api_key || !api_secret) {
-    console.log("Missing Stream API key or secret");
+    throw new Error("Missing Stream API key or secret");
 }
 
 
@@ -20,7 +20,7 @@ export const upsertStreamUser = async (userData) => {
     }
     catch(error){
         console.log("error in createStreamUser",error);
-        
+        throw new Error("Error upserting Stream user");
     }
 }
 
@@ -32,5 +32,6 @@ export const generateStreamToken = async (userId) => {
     }
     catch(error){
         console.log("error in generateStreamToken",error);
+        throw new Error("Error generating Stream token");
     }
 }

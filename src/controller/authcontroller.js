@@ -79,14 +79,14 @@ export const registerUser = async (req, res) => {
 
     await sendVerificationEmail(Email, otp);
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "OTP sent to your email. Please verify.",
       userId: newUser._id,
       needVerification: true,
     });
   } catch (error) {
     console.log("error in register user", error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -138,12 +138,12 @@ export const verifyEmail = async (req, res) => {
       sameSite: "none",
     });
 
-    res
+    return res
       .status(200)
       .json({ message: "Email verified successfully", user, token });
   } catch (error) {
     console.log("error in verify email", error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -188,7 +188,7 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.log("error in login user", error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -302,7 +302,7 @@ export const onboard = async (req, res) => {
     return res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     console.log("error in onboard", error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

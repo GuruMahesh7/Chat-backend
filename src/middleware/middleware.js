@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import User from "../model/User.js";
-import cookieParser from "cookie-parser";
 
 
 export const protectedRoute = async(req,res,next) => {
@@ -27,7 +26,7 @@ export const protectedRoute = async(req,res,next) => {
     }           
     catch(error){
         console.log("error in protectedRoute",error);
-        res.status(500).json({message:error.message});
+        return res.status(500).json({message:error.message});
     }    
     
     

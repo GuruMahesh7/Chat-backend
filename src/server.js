@@ -7,6 +7,7 @@ import route from "./routes/route.js";
 import { connecttoDB } from "./lib/db.js";
 import usersroute from "./routes/userroute.js";
 import chatRoutes from "./routes/chatroute.js";
+import aiRoute from "./routes/aiRoute.js";
 
 dotenv.config();
 
@@ -16,10 +17,22 @@ app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: true, limit: "500mb" }));
 app.use(cookieParser());
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chat-frontend-ten-swart.vercel.app",
+].map((o) => o.replace(/\/$/, "")); // Strip trailing slashes
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true, // allow frontend to send cookies
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   }),
 );
 
@@ -30,6 +43,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", route);
 app.use("/api/users", usersroute);
 app.use("/api/chat", chatRoutes);
+app.use("/api/ai", aiRoute);
 
 const PORT = process.env.PORT || 5000;
 const mongo_uri = process.env.MONGO_URI;
