@@ -20,6 +20,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://chat-frontend-ten-swart.vercel.app",
+  "https://chat-frontend-theta-tawny.vercel.app",
 ].map((o) => o.replace(/\/$/, "")); // Strip trailing slashes
 
 app.use(
